@@ -10,9 +10,10 @@ sources:
   - src/pages/llms.txt.ts
   - src/pages/[...locale]/rss.xml.ts
   - scripts/og.mjs
+  - scripts/favicon.mjs
   - astro.config.mjs
   - src/i18n/index.ts
-updated: 2026-08-15
+updated: 2026-09-13
 ---
 
 # SEO layer
@@ -20,7 +21,7 @@ updated: 2026-08-15
 No SEO package is installed. The layer is four hand-written pieces: a head
 component, a set of JSON-LD constructors, three text endpoints, and an OG
 image generator. The single source of the production origin is `site` in
-astro.config.mjs:10; everything below derives absolute URLs from it.
+astro.config.mjs:36; everything below derives absolute URLs from it.
 
 The site is bilingual, so every tag below has a language dimension:
 hreflang alternates, `og:locale`, a per-language RSS feed and the sitemap's
@@ -34,12 +35,16 @@ One component writes the entire `<head>`:
 - Title policy at :41 ("Title | Brand" unless the brand is already in the
   title), description defaulting to siteData (:34).
 - Canonical at :45-48, aligned with `trailingSlash: "always"`
-  (astro.config.mjs:14); file routes keep their extension.
+  (astro.config.mjs:40); file routes keep their extension.
 - Full Open Graph (:106-113) and twitter card (:120-125) blocks, with image
   alt.
-- Favicon generated at build: the brand colors are regex-extracted from
-  tokens.css imported raw (:21, :65-68) and injected into an inline SVG data
-  URI (:71-72). A rebrand repaints the favicon with no asset to edit.
+- Favicon generated at build by scripts/favicon.mjs, which reads the brand
+  colors from tokens.css and writes favicon.svg, favicon.ico (16, 32 and 48
+  packed together), favicon-96.png and apple-touch-icon.png into public/.
+  BaseHead only links them, and `sizes` tells the truth about each file:
+  `16x16 32x32 48x48` on the ICO, `96x96` on the PNG. Google only shows a
+  favicon it can crawl as a raster image; the inline SVG does not count. A
+  rebrand repaints the favicon with no asset to edit.
 - theme-color follows the scheme (:102-103), sitemap and RSS discovery links
   (:87-93), optional noindex (:84), ClientRouter last (:130).
 - The `<slot />` at :128 receives the JSON-LD scripts from pages.
@@ -72,8 +77,11 @@ website only (index.astro), a post carries article + breadcrumbList
   taken from the newest post.
 
 The sitemap integration filters /404/ and /examples/ out
-(astro.config.mjs:35). A page hidden from robots should be hidden from the
-sitemap too; keep them in step.
+(astro.config.mjs:61). A page hidden from robots should be hidden from the
+sitemap too; keep them in step. Its `serialize` hook (astro.config.mjs:68)
+re-reads the `<link rel="alternate" hreflang>` tags of the built page in
+dist/ and writes those, x-default included, as the sitemap alternates; a
+page without them keeps the integration's own pairing.
 
 ## OG images
 
