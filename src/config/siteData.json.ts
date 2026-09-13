@@ -10,13 +10,15 @@ const siteData: SiteDataProps = {
     "A free Astro 7 blog theme built for reading: an editorial home, a post page tuned for eight minutes of attention, topic archives, author pages, client-side search, and a bilingual layer that costs one line per language.",
   useViewTransitions: true,
 
-  // VIDE VOLONTAIREMENT : une demonstration ne cite pas d'entreprise reelle.
-  // La ligne de pied de page qui citait le studio est donc eteinte. Le mecanisme
-  // reste entier, champ, composant et cles i18n compris, et se rallume en
-  // remettant "demo.notice" dans ce champ.
-  demoNotice: "",
+  // La ligne de pied de page qui dit que ce site est une demonstration du
+  // theme, avec le lien vers la boutique. Elle avait ete eteinte le temps que
+  // le catalogue Astro approuve la fiche ; rallumee le 13 septembre 2026, parce
+  // que la demonstration etait le seul site de la famille sans lien vers les
+  // themes payants. Le texte vit dans src/i18n/ui/{en,fr}/demo.ts et ne cite
+  // que la boutique, aucune personne ni adresse. Vider ce champ eteint la ligne.
+  demoNotice: "demo.notice",
 
-  // Identite NEUTRE, pour la meme raison : une demo ne porte ni nom
+  // Identite NEUTRE, regle du catalogue Astro : une demo ne porte ni nom
   // d'utilisateur reel, ni domaine que l'on ne possede pas. L'utilisateur met
   // les siens ici, et le pied de page suit.
   author: {
