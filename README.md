@@ -165,9 +165,10 @@ docs/           the five convention files, one per subsystem
 ## Before you deploy
 
 - [ ] `site` in astro.config.mjs points at your real domain.
-- [ ] `demoNotice` in src/config/siteData.json.ts is already empty, so the
-      footer line saying "this site is a demo" does not render. Only put a key
-      back in that field if you want the line; there is no component to open.
+- [ ] `demoNotice` in src/config/siteData.json.ts is emptied, so the footer
+      line saying "this site is a demo of the Reef theme" does not render on
+      your site. The demo keeps it; you clear the field, and there is no
+      component to open.
 - [ ] `pnpm og` ran after your rebrand, so the cards in public/og/ carry your
       colors and not Reef Notes'.
 - [ ] Legal copy in src/config/legalData.json.ts reviewed by a human who may
@@ -223,6 +224,23 @@ this theme is handled in one place rather than two.
   https://alohapixel.app/themes/
 
 Pull requests are welcome all the same.
+
+## What the paid themes add
+
+Reef ships the whole foundation: the UI primitives, the typed bilingual layer
+with its language switcher, the measured dark mode, the owned SEO, the motion,
+the verification scripts and the conventions written for agents. That is
+deliberate: it is how you try the house without paying, and for a blog it is
+complete.
+
+The six paid themes add the business built on top of that foundation: a shop
+with products and a cart, an eight-screen back office, a headless storefront
+read from WooCommerce or Shopify, a SaaS site with its pricing page and its
+eight-screen dashboard, a launch page with its pricing section. Not one of
+those files is in Reef.
+
+The seven themes, side by side, with prices and live demos:
+https://alohapixel.app/themes/
 
 ## License
 
