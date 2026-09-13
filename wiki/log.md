@@ -3,7 +3,7 @@
 title: Wiki log
 summary: Dated journal of code changes reflected in the wiki, and the list of open threads.
 sources: []
-updated: 2026-09-02
+updated: 2026-09-13
 ---
 
 # Wiki log
@@ -12,6 +12,22 @@ Newest entry first. Every `wiki sync` appends an entry here, even when
 nothing needed updating. Open threads are questions or known gaps waiting on
 a decision; close them by editing this list and noting the resolution in a
 dated entry.
+
+## 2026-09-13 - 1.8.0, the favicon tells the truth and the sitemap reads the head
+
+- BaseHead declares the ICO with `sizes="16x16 32x32 48x48"`, which is what
+  scripts/favicon.mjs packs into it, and adds a link to the `favicon-96.png`
+  the same script already wrote at every build without anyone declaring it.
+  wiki/subsystems/seo.md still described the old inline SVG data URI; it now
+  describes the files.
+- astro.config.mjs gains a `serialize` hook on the sitemap integration: it
+  re-reads the hreflang tags of the built page in dist/ and writes them,
+  x-default included, as the sitemap alternates. The `i18n` option stays for
+  pages that carry none. docs/conventions/seo.md, wiki/subsystems/seo.md and
+  wiki/subsystems/i18n.md say so, and the line references into
+  astro.config.mjs were moved with the code.
+- .github/workflows/verifier.yml replays install, check, build, test and
+  house lint on every push and pull request.
 
 ## 2026-09-02 - 1.7.0, the halos are gone and the language switch is a switch
 
