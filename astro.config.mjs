@@ -3,6 +3,32 @@ import mdx from "@astrojs/mdx";
 import sitemap from "@astrojs/sitemap";
 import tailwindcss from "@tailwindcss/vite";
 import { defineConfig } from "astro/config";
+import { readFileSync } from "node:fs";
+import { fileURLToPath } from "node:url";
+
+const DIST = fileURLToPath(new URL("./dist/", import.meta.url));
+
+// Lit les hreflang que la page construite porte deja : le head est la seule
+// source, le plan de site ne peut donc plus le contredire. L'integration
+// sitemap appariait les langues par identite de chemin et n'ecrivait aucun
+// x-default, alors que le head en porte un sur chaque page ; `serialize` est
+// appele apres le build, donc dist/ existe et on y relit la verite.
+function hreflangDuHtml(/** @type {string} */ pathname) {
+  // "/fr/about/" devient "fr/about/", et la racine "/" devient "" : le chemin
+  // se colle a DIST sans doubler le separateur.
+  const relatif = pathname.replace(/^\/+/, "");
+  const fichier = `${DIST}${relatif === "" || relatif.endsWith("/") ? relatif : `${relatif}/`}index.html`;
+  let html = "";
+  try {
+    html = readFileSync(fichier, "utf8");
+  } catch {
+    return [];
+  }
+  const links = [];
+  const motif = /<link\s+rel="alternate"\s+hreflang="([^"]+)"\s+href="([^"]+)"\s*\/?>/g;
+  for (const m of html.matchAll(motif)) links.push({ lang: m[1], url: m[2] });
+  return links;
+}
 
 // https://astro.build/config
 export default defineConfig({
@@ -36,6 +62,13 @@ export default defineConfig({
       // Le sitemap porte les memes alternatives que les balises hreflang du
       // head : Google recoupe les deux, et un desaccord fait ignorer les deux.
       i18n: { defaultLocale: "en", locales: { en: "en", fr: "fr" } },
+      // Quand la page construite porte ses hreflang, ce sont eux (x-default
+      // compris) qui vont dans le plan de site ; sinon l'appariement de
+      // l'integration reste. Une page sans jumelle ne declare que son head.
+      serialize(item) {
+        const links = hreflangDuHtml(new URL(item.url).pathname);
+        return links.length > 1 ? { ...item, links } : item;
+      },
     }),
   ],
 
