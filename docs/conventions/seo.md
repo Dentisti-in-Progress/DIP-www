@@ -16,10 +16,10 @@ missing, add it there, readable and diffable. BaseLayout passes its
 - Every page sets a written-for-humans `description`; the site-wide fallback
   (siteData.description) is for utility pages only.
 - Canonical: one URL shape, derived from `trailingSlash: "always"`
-  (astro.config.mjs:14) and computed in BaseHead.astro:45-48. File routes
+  (astro.config.mjs:40) and computed in BaseHead.astro:45-48. File routes
   (rss.xml, robots.txt) keep their extension.
 - The single source of the production origin is `site` in
-  astro.config.mjs:10. It feeds canonical, OG, sitemap, robots.txt and
+  astro.config.mjs:36. It feeds canonical, OG, sitemap, robots.txt and
   llms.txt at once; never hardcode the domain elsewhere.
 
 ## JSON-LD: constructors only
@@ -65,8 +65,12 @@ Three hand-written endpoints, all deriving URLs from `site`:
   drafts excluded, deterministic lastBuildDate (the newest post).
 
 The sitemap integration filters out /404/ and /examples/
-(astro.config.mjs:35). A page hidden from robots should be hidden from the
-sitemap too; keep them in step.
+(astro.config.mjs:61). A page hidden from robots should be hidden from the
+sitemap too; keep them in step. Its `serialize` hook (astro.config.mjs:68)
+re-reads the `<link rel="alternate" hreflang>` tags of the built page in
+dist/ and writes those, x-default included, as the sitemap alternates; a
+page without them keeps the integration's own pairing. The head is the only
+source, so the sitemap cannot contradict it.
 
 ## Images and indexing
 
