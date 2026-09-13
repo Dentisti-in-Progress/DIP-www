@@ -145,8 +145,16 @@ const groundLight = resolveToken("color-background", lightBlock);
 {/* L'ordre compte pour les navigateurs, pas pour Google : le SVG est
     prefere quand il est compris, l'ICO sert de repli et reste ce que
     Googlebot-Image sait lire. L'ICO est aussi a /favicon.ico, l'adresse que
-    tout navigateur demande de lui-meme meme sans balise. */}
-<link rel="icon" href="/favicon.ico" sizes="32x32" />
+    tout navigateur demande de lui-meme meme sans balise.
+
+    Google ne montre un favicon dans ses resultats que s'il peut l'explorer
+    en matriciel : le SVG inline ne compte pas, seuls l'ICO et le PNG comptent.
+    Et `sizes` doit dire la verite sur son fichier : scripts/favicon.mjs
+    empaquette 16, 32 et 48 dans l'ICO, donc la balise les declare tous les
+    trois, et le PNG de 96 qu'il ecrit a chaque build est declare aussi, au
+    lieu d'etre servi sans que personne ne sache qu'il existe. */}
+<link rel="icon" href="/favicon.ico" sizes="16x16 32x32 48x48" />
+<link rel="icon" href="/favicon-96.png" type="image/png" sizes="96x96" />
 <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
 <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
 <link rel="sitemap" href="/sitemap-index.xml" />
