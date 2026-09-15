@@ -21,9 +21,10 @@
  * supprime l'appel dans "build" et depose ses images a la main.
  */
 
-import { mkdirSync, existsSync, readFileSync, writeFileSync } from "node:fs";
+import { mkdirSync, existsSync, readFileSync, writeFileSync, renameSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
+import { createHash } from "node:crypto";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 // Toutes les photographies viennent de Pexels et sont utilisees sous licence
@@ -36,64 +37,7 @@ const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 // plutot que le JPEG d'origine, et w/h/fit=crop fixent le cadrage exact, celui
 // que montre la demonstration. Sans eux, chaque compilation recadrerait un peu
 // autrement.
-const PEXELS = "https://images.pexels.com/photos";
-
-const MANIFEST = {
-  // Le premier ecran : la vague qui se creuse. C'est la photo de la maison, et
-  // le logo du theme est une vague.
-  "reef-hero-vague.webp": {
-    url: `${PEXELS}/29275767/pexels-photo-29275767.jpeg?auto=compress&cs=srgb&fm=webp&w=2560&h=1441&fit=crop`,
-    minWidth: 2560,
-  },
-  // Mesurer chez le lecteur : le soleil pose sur l'horizon donne l'echelle que
-  // le large ne donne pas.
-  "covers/reef-mesurer-lecteur.webp": {
-    url: `${PEXELS}/14281585/pexels-photo-14281585.jpeg?auto=compress&cs=srgb&fm=webp&w=1200&h=1500&fit=crop`,
-    minWidth: 1200,
-  },
-  // Un bon brief : un recif a une structure lisible, chaque chose a sa place.
-  "covers/reef-bon-brief.webp": {
-    url: `${PEXELS}/29290970/pexels-photo-29290970.jpeg?auto=compress&cs=srgb&fm=webp&w=1536&h=1920&fit=crop`,
-    minWidth: 1200,
-  },
-  // Mode sombre : la meme matiere, la lumiere inversee.
-  "covers/reef-mode-sombre.webp": {
-    url: `${PEXELS}/35613489/pexels-photo-35613489.jpeg?auto=compress&cs=srgb&fm=webp&w=2500&h=1667&fit=crop`,
-    minWidth: 1200,
-  },
-  // Une collection est un contrat : la tortue tient sa route parce que le
-  // recif dessous a une structure.
-  "covers/reef-collections-contrat.webp": {
-    url: `${PEXELS}/20443161/pexels-photo-20443161.jpeg?auto=compress&cs=srgb&fm=webp&w=1600&h=1067&fit=crop`,
-    minWidth: 1200,
-  },
-  // Le cout d'une police : ce qui parait leger de loin pese de pres.
-  "covers/reef-cout-police.webp": {
-    url: `${PEXELS}/12810721/pexels-photo-12810721.jpeg?auto=compress&cs=srgb&fm=webp&w=1200&h=1500&fit=crop`,
-    minWidth: 1200,
-  },
-  // Un budget de performance : une vague a un budget avant de casser.
-  "covers/reef-budget-performance.webp": {
-    url: `${PEXELS}/29275767/pexels-photo-29275767.jpeg?auto=compress&cs=srgb&fm=webp&w=1200&h=1500&fit=crop`,
-    minWidth: 1200,
-  },
-  // Une echelle typographique : des paliers qui s'etagent, et on voit le
-  // suivant sans compter.
-  "covers/reef-echelle-typo.webp": {
-    url: `${PEXELS}/8985046/pexels-photo-8985046.jpeg?auto=compress&cs=srgb&fm=webp&w=1920&h=1500&fit=crop`,
-    minWidth: 1200,
-  },
-  // Du HTML qui vieillit bien : la falaise est toujours la.
-  "covers/reef-html-qui-vieillit.webp": {
-    url: `${PEXELS}/4321834/pexels-photo-4321834.jpeg?auto=compress&cs=srgb&fm=webp&w=1600&h=1067&fit=crop`,
-    minWidth: 1200,
-  },
-  // Chiffrer une refonte : vue du ciel, on mesure au lieu de deviner.
-  "covers/reef-prix-refonte.webp": {
-    url: `${PEXELS}/8332588/pexels-photo-8332588.jpeg?auto=compress&cs=srgb&fm=webp&w=1200&h=1500&fit=crop`,
-    minWidth: 1200,
-  },
-};
+const MANIFEST = JSON.parse(readFileSync(new URL("./covers.json", import.meta.url), "utf8"));
 
 // Largeur d'un WebP, lue dans l'en-tete. Trois formes existent et il faut les
 // trois : VP8 pour le compresse avec perte, VP8L pour le sans perte, VP8X pour
@@ -111,21 +55,39 @@ function largeurWebp(buf) {
   return 0;
 }
 
+// Le cache associe les octets a leur URL : changer le manifeste invalide l'image.
+// Le hash refuse une copie tronquee ou modifiee. --refresh force le reseau.
+const cachePath = join(ROOT, "node_modules/.cache/reef-covers.json");
+let cache = {};
+try { cache = JSON.parse(readFileSync(cachePath, "utf8")); } catch { /* premier build */ }
+const hash = (bytes) => createHash("sha256").update(bytes).digest("hex");
+const refresh = process.argv.includes("--refresh");
+let reutilises = 0;
 let telecharges = 0;
 let conserves = 0;
 
 for (const [rel, { url, minWidth }] of Object.entries(MANIFEST)) {
   const out = join(ROOT, "src/assets", rel);
   mkdirSync(dirname(out), { recursive: true });
+  if (!refresh && cache[rel]?.url === url && existsSync(out)) {
+    const local = readFileSync(out);
+    if (largeurWebp(local) >= minWidth && hash(local) === cache[rel].sha256) {
+      reutilises++;
+      continue;
+    }
+  }
   try {
     const res = await fetch(url);
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     const buf = Buffer.from(await res.arrayBuffer());
     const large = largeurWebp(buf);
-    if (large && large < minWidth) {
+    if (large < minWidth) {
       throw new Error(`${large} px de large, il en faut ${minWidth}`);
     }
-    writeFileSync(out, buf);
+    // Valider avant de remplacer la copie existante, puis remplacement atomique.
+    writeFileSync(`${out}.tmp`, buf);
+    renameSync(`${out}.tmp`, out);
+    cache[rel] = { url, sha256: hash(buf) };
     telecharges++;
   } catch (err) {
     if (existsSync(out) && largeurWebp(readFileSync(out)) >= minWidth) {
@@ -137,5 +99,7 @@ for (const [rel, { url, minWidth }] of Object.entries(MANIFEST)) {
   }
 }
 
-console.log(`${telecharges} visuels rapatries dans src/assets/` +
+mkdirSync(dirname(cachePath), { recursive: true });
+writeFileSync(cachePath, JSON.stringify(cache));
+console.log(`${reutilises} visuels reutilises sans reseau, ${telecharges} visuels rapatries dans src/assets/` +
   (conserves ? `, ${conserves} conserves depuis la copie locale` : ""));

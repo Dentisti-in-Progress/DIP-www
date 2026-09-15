@@ -1,8 +1,11 @@
-# wrangler.toml - deploiement de la demo en ligne (reef-demo). Ne concerne pas le theme lui-meme.
+# wrangler.toml - deploiement de la demo Reef et garde serveur du back office optionnel.
 
 name = "reef-demo"
 main = "src/worker.ts"
 compatibility_date = "2026-08-14"
+
+[vars]
+ALOHA_DEMO_BACKOFFICE = "1"
 
 [assets]
 directory = "./dist"
