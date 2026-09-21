@@ -3,7 +3,7 @@
 # Reef - the brief
 
 > Reef is the blog theme of the Aloha Pixel family, a free Astro theme,
-> bilingual in English and French. This document says what the theme contains,
+> bilingual in Italian and English. This document says what the theme contains,
 > how it is built, and the rules that hold it together.
 
 ## 0. This repository
@@ -20,7 +20,7 @@ neutral, reef turquoise for action, coral as a rationed second accent, Space
 Grotesk for display and Instrument Sans for body text; the accent word keeps the
 heading font, turns the house turquoise and carries a turquoise wave (the Aloha
 Pixel mark is a wave). The theme is light by default, with a dark mode composed
-rather than inverted; English holds the root, French lives under /fr/.
+rather than inverted; Italian holds the root, English lives under /en/.
 
 ## 1. What the repository contains, measured
 
@@ -35,7 +35,7 @@ Numbers recounted from the source (`pnpm build` green, `astro check` at 0/0/0).
 | Section components | 24 |
 | Hand-drawn icons | 60 |
 | `animate-*` utilities | 55 in the catalog, plus 3 brand animations |
-| Languages | 2 (English at the root, French under /fr/) |
+| Languages | 2 (Italian at the root, English under /en/) |
 | Wiki pages | 11 |
 | Convention files (`docs/conventions/`) | 5 |
 | Runtime dependencies | 9, each one tracked in THIRD-PARTY.md |

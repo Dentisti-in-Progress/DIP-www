@@ -2,7 +2,7 @@
 //
 // Un flux PAR LANGUE, et pas un flux melange : un lecteur francophone qui
 // s'abonne ne veut pas voir arriver la moitie des titres en anglais. L'anglais
-// garde /rss.xml, le francais obtient /fr/rss.xml, et chaque page declare le
+// garde /rss.xml, l'anglais obtient /en/rss.xml, et chaque page declare le
 // sien dans son <head> (voir BaseHead).
 import siteData from "@config/siteData.json";
 import { getLocale, localeMeta, localePaths, localizePath, useTranslations } from "@i18n";

@@ -5,7 +5,7 @@ function init() {
   const root = document.querySelector<HTMLElement>("[data-categories]");
   if (!root || root.dataset.ready) return;
   root.dataset.ready = "1";
-  const lang = root.dataset.locale === "fr" ? "fr" : "en", t = backofficeCopy[lang];
+  const lang = root.dataset.locale === "it" ? "it" : "en", t = backofficeCopy[lang];
   const demo = root.dataset.demo === "true";
   const status = root.querySelector<HTMLElement>("[data-category-status]")!;
   const form = root.querySelector<HTMLFormElement>("[data-category-form]")!;

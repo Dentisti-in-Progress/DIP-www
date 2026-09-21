@@ -43,12 +43,12 @@ export default defineConfig({
   // n'impose aucun hebergeur a son utilisateur.
   security: { checkOrigin: true },
 
-  // Routage bilingue. L'anglais est servi a la racine (/, /about/), le francais
-  // sous /fr/. prefixDefaultLocale: false est ce qui evite un /en/ inutile dans
+  // Routage bilingue. L'italien est servi a la racine (/, /about/), l'anglais
+  // sous /en/. prefixDefaultLocale: false est ce qui evite un /it/ inutile dans
   // les URLs. La liste vit dans src/i18n/config.ts, une seule source de verite.
   i18n: {
-    defaultLocale: "en",
-    locales: ["en", "fr"],
+    defaultLocale: "it",
+    locales: ["it", "en"],
     routing: { prefixDefaultLocale: false, redirectToDefaultLocale: false },
   },
 
@@ -61,7 +61,7 @@ export default defineConfig({
       filter: (page) => !["/404/", "/examples/", "/secret-spot/"].some((p) => page.includes(p)),
       // Le sitemap porte les memes alternatives que les balises hreflang du
       // head : Google recoupe les deux, et un desaccord fait ignorer les deux.
-      i18n: { defaultLocale: "en", locales: { en: "en", fr: "fr" } },
+      i18n: { defaultLocale: "it", locales: { it: "it", en: "en" } },
       // Quand la page construite porte ses hreflang, ce sont eux (x-default
       // compris) qui vont dans le plan de site ; sinon l'appariement de
       // l'integration reste. Une page sans jumelle ne declare que son head.

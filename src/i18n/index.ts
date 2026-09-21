@@ -14,14 +14,14 @@
 
 import { defaultLocale, isLocale, localeMeta, locales, type Locale } from "./config";
 import { en } from "./ui/en/index";
-import { fr } from "./ui/fr/index";
+import { it } from "./ui/it/index";
 import type { Dictionary } from "./ui/types";
 
 export { defaultLocale, isLocale, localeMeta, locales };
 export type { Locale };
 export type { Dictionary };
 
-const dictionaries: Record<Locale, Dictionary> = { en, fr };
+const dictionaries: Record<Locale, Dictionary> = { it, en };
 
 /** La copie de la langue demandee. Jamais de secours silencieux vers l'anglais :
  *  une cle manquante est impossible, le type l'interdit deja. */
@@ -50,8 +50,8 @@ export function localePrefix(locale: Locale): string {
  * Traduit un chemin canonique (toujours ecrit en anglais, sans prefixe) vers la
  * langue voulue. C'est la seule fonction que la navigation doit appeler :
  *
- *   localizePath("/pricing/", "fr")  ->  "/fr/pricing/"
- *   localizePath("/pricing/", "en")  ->  "/pricing/"
+ *   localizePath("/pricing/", "en")  ->  "/en/pricing/"
+ *   localizePath("/pricing/", "it")  ->  "/pricing/"
  *
  * Les URLs absolues et les ancres passent au travers sans etre touchees : un
  * lien mailto: ou https:// n'a pas de version francaise.
@@ -63,11 +63,11 @@ export function localizePath(path: string, locale: Locale): string {
   const clean = stripLocale(path);
   const prefix = localePrefix(locale);
   if (!prefix) return clean;
-  // "/" devient "/fr/" et pas "/fr", pour rester coherent avec trailingSlash: "always".
+  // "/" devient "/en/" et pas "/en", pour rester coherent avec trailingSlash: "always".
   return clean === "/" ? `${prefix}/` : `${prefix}${clean}`;
 }
 
-/** Retire le prefixe de langue d'un chemin : "/fr/pricing/" -> "/pricing/". */
+/** Retire le prefixe de langue d'un chemin : "/en/pricing/" -> "/pricing/". */
 export function stripLocale(path: string): string {
   const match = /^\/([a-z]{2}(?:-[a-z]{2})?)(?=\/|$)/i.exec(path);
   if (match && isLocale(match[1])) {
@@ -117,7 +117,7 @@ export function getAlternates(url: URL, site: URL | undefined, current: Locale):
  * Les params de getStaticPaths pour une route posee sous src/pages/[...locale]/.
  *
  * `undefined` genere la route sans prefixe (l'anglais, a la racine) ; les autres
- * langues generent /fr/..., /es/... Une seule page source, autant de sorties que
+ * langues generent /en/..., /es/... Une seule page source, autant de sorties que
  * de langues declarees. Ajouter une langue ne demande donc de toucher a aucune
  * page.
  */

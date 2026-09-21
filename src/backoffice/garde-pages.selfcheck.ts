@@ -5,13 +5,13 @@ import type { Identite } from "./contrat.ts";
 let identity: Identite | null = null;
 let served = 0;
 let failed = false;
-const guard = creerGardePages({ bases: ["/secret-spot", "/fr/secret-spot"],
+const guard = creerGardePages({ bases: ["/secret-spot", "/it/secret-spot"],
   autoriser: async () => { if (failed) throw new Error("offline"); return identity; },
   servir: async () => { served++; return new Response("private HTML", { headers: { "Cache-Control": "public, max-age=3600" } }); },
 });
 const request = (path: string, method = "GET") => new Request(`https://reef.example.test${path}`, { method });
 assert.equal(await guard(request("/blog/")), null);
-for (const path of ["/secret-spot", "/secret-spot/", "/secret-spot.html", "/secret-spot/index.html", "/%73ecret-spot/articles/", "/fr/secret-spot/articles/"]) {
+for (const path of ["/secret-spot", "/secret-spot/", "/secret-spot.html", "/secret-spot/index.html", "/%73ecret-spot/articles/", "/it/secret-spot/articles/"]) {
   assert.equal((await guard(request(path)))?.status, 302, path);
 }
 identity = { email: "client@example.test", role: "customer" };

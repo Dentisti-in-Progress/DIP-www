@@ -45,8 +45,8 @@ export function authAutonome(env: AuthAutonomeEnv, origin: string, transport: ty
         const challenge = await result.json() as { success?: boolean; hostname?: string };
         if (!result.ok || !challenge.success || challenge.hostname !== new URL(origin).hostname) return json({ error: "challenge_failed" }, 400);
         const code = await issueCode(secret, email, Date.now());
-        const fr = body.locale === "fr";
-        const sent = await transport("https://api.resend.com/emails", { method: "POST", headers: { Authorization: `Bearer ${env.ALOHA_MAIL_KEY}`, "Content-Type": "application/json" }, body: JSON.stringify({ from: env.ALOHA_MAIL_FROM, to: [email], subject: fr ? "Votre code de connexion" : "Your sign-in code", text: fr ? `Votre code : ${code}` : `Your code: ${code}` }) });
+        const it = body.locale === "it";
+        const sent = await transport("https://api.resend.com/emails", { method: "POST", headers: { Authorization: `Bearer ${env.ALOHA_MAIL_KEY}`, "Content-Type": "application/json" }, body: JSON.stringify({ from: env.ALOHA_MAIL_FROM, to: [email], subject: it ? "Votre code de connexion" : "Your sign-in code", text: it ? `Votre code : ${code}` : `Your code: ${code}` }) });
         return sent.ok ? json({ ok: true }) : json({ error: "mail_unavailable" }, 503);
       }
       if (!await limit(`verify:${email}`, 8)) return json({ error: "rate_limit" }, 429);

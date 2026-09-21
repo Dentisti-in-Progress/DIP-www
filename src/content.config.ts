@@ -1,6 +1,6 @@
 // src/content.config.ts - les trois collections de Reef (posts, authors, topics), chargees par glob depuis src/data.
 //
-// Le contenu est range par langue : src/data/posts/en/... et src/data/posts/fr/...
+// Le contenu est range par langue : src/data/posts/it/... et src/data/posts/en/...
 // Le loader glob fabrique donc des id prefixes ("en/mon-article"), ce qui donne
 // deux garanties gratuitement : filtrer une langue est un simple prefixe, et
 // deux versions d'un meme article portent le meme slug une fois le prefixe

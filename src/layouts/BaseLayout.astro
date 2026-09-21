@@ -19,7 +19,7 @@ export interface Props {
 const { title, description, image, type, noindex } = Astro.props;
 
 // lang et dir viennent de la langue de l'URL, jamais d'une constante. C'est ce
-// qui fait qu'un lecteur d'ecran change de voix entre /pricing/ et /fr/pricing/,
+// qui fait qu'un lecteur d'ecran change de voix entre /pricing/ et /en/pricing/,
 // et qu'une future langue RTL n'obligera a rouvrir aucun layout.
 const locale = getLocale(Astro);
 const meta = localeMeta[locale];

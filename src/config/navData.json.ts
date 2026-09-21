@@ -4,7 +4,7 @@
 // qu'ils doivent exister dans chaque langue. Ce fichier ne decrit que la
 // STRUCTURE de la navigation (quel item, quelle colonne) et les chemins
 // canoniques. Le prefixe de langue est ajoute par localizePath au moment du
-// rendu, jamais ecrit en dur : /blog/ devient /fr/blog/ tout seul.
+// rendu, jamais ecrit en dur : /blog/ devient /en/blog/ tout seul.
 
 import { localizePath, useTranslations, type Locale } from "@i18n";
 import type { FooterColumn, NavItem, SiteRoutes } from "./types/configDataTypes";

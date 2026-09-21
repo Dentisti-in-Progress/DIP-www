@@ -19,25 +19,4 @@ const en = {
   published: "The website now serves this version of the article.", draftBuilt: "The website build includes this draft. It remains excluded from article lists.",
   publicationPending: "Saved. Publication is still unconfirmed. You can check again without saving a second time.", checkPublication: "Check publication",
 };
-type Copy = { [K in keyof typeof en]: string };
-const fr: Copy = {
-  demoSelect: "Sélectionnez un article pour découvrir l’éditeur.",
-  demoHint: "Démonstration en lecture seule. Découvrez l’éditeur et les rubriques ; aucune modification ne peut être enregistrée. Activez le back-office avec vos propres services après installation.",
-  accentCoral: "Corail", accentReef: "Turquoise", accentInk: "Encre", noResults: "Aucun article ne correspond à la recherche.",
-  categorySlug: "Adresse de la rubrique", categoryLoading: "Chargement des rubriques…", noCategories: "Aucune rubrique pour le moment.", categoryDeleted: "Rubrique supprimée. Mise à jour du site en attente.",
-  categories: "Rubriques", newCategory: "Nouvelle rubrique", name: "Nom", order: "Ordre d’affichage", accent: "Couleur d’accent", categoryUsed: "Cette rubrique est utilisée par un article. Déplacez ses articles vers une autre rubrique avant de la supprimer.", deleteCategory: "Supprimer la rubrique", confirmCategoryDelete: "Supprimer cette rubrique inutilisée ?", categorySaved: "Rubrique enregistrée. Mise à jour du site en attente.",
-  remove: "Supprimer l’article", confirmDelete: "Supprimer cet article ? La suppression sera enregistrée dans votre dépôt.", deleted: "Article supprimé du dépôt. Mise à jour du site en attente.", state: "État", publishedState: "Publié", actions: "Actions", edit: "Modifier", search: "Rechercher un article",
-  connected: "Connecté en tant que", space: "Espace éditorial", articles: "Articles", back: "Voir le site", logout: "Se déconnecter", email: "Adresse e-mail",
-  title: "Titre", description: "Description", date: "Date de publication", author: "Auteur", topic: "Rubrique", tags: "Étiquettes (séparées par des virgules)",
-  cover: "Image de couverture", coverAlt: "Description de l’image", body: "Article (Markdown)", draft: "Brouillon", featured: "Article à la une",
-  slug: "Adresse de l’article", newArticle: "Nouvel article", save: "Enregistrer", preview: "Aperçu de lecture", loading: "Chargement des articles…",
-  saved: "Enregistré sur GitHub. La construction du site est en attente ; la publication n’est pas encore confirmée.", saving: "Enregistrement…",
-  failed: "La demande a échoué. Votre texte reste dans le formulaire. Réessayez.", conflict: "Cet article a changé depuis son ouverture. Copiez votre texte avant de recharger sa dernière version.",
-  invalid: "Vérifiez ces champs : ", discard: "Abandonner vos modifications non enregistrées ?", empty: "Aucun article pour le moment.", select: "Sélectionnez un article ou créez un brouillon.",
-  signIn: "Connexion", sendCode: "Recevoir un code de connexion", code: "Code à six chiffres", verify: "Continuer", codeSent: "Si cette adresse est autorisée, un code vient d’être envoyé.",
-  loginHelp: "Utilisez l’adresse administrateur configurée pour ce site.", loginFailed: "La connexion a échoué. Vérifiez le code ou réessayez plus tard.",
-  unavailable: "La connexion n’est pas configurée ou est momentanément indisponible.", contentLanguage: "Langue des articles", noCover: "Sans image de couverture",
-  published: "Le site sert maintenant cette version de l’article.", draftBuilt: "La construction du site inclut ce brouillon. Il reste exclu des listes d’articles.",
-  publicationPending: "Enregistré. La publication reste à confirmer. Vous pouvez revérifier sans enregistrer une seconde fois.", checkPublication: "Vérifier la publication",
-};
-export const backofficeCopy = { en, fr };
+export const backofficeCopy = { it: en, en };

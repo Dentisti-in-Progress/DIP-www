@@ -2,8 +2,8 @@
 // Le back office exige cette garde serveur avant tout service des fichiers HTML.
 import { backoffice, type BackofficeEnv } from "./backoffice/worker-backoffice.ts";
 
-const LOCALES = ["en", "fr"];
-const ROOT_LOCALE = "en";
+const LOCALES = ["it", "en"];
+const ROOT_LOCALE = "it";
 // Repli quand ni le cookie ni Accept-Language ne designent une langue servie :
 // l'anglais, qui tient la racine et porte le x-default.
 //
@@ -11,7 +11,7 @@ const ROOT_LOCALE = "en";
 // toujours Accept-Language. Le poser sur le francais revient donc a repondre
 // 302 a Googlebot sur chaque adresse racine, et la moitie anglaise du site
 // sort de l'index alors que les balises hreflang la declarent canonique.
-const FALLBACK_LOCALE = "en";
+const FALLBACK_LOCALE = "it";
 const LOCALE_COOKIE = "aloha_locale";
 
 // Lit un cookie precis sans parser tout l'entete : on cherche une seule cle.
@@ -61,9 +61,9 @@ export default {
     let decodedPath: string;
     try { decodedPath = decodeURIComponent(path); } catch { return new Response(null, { status: 400 }); }
     if (env.ALOHA_DEMO_BACKOFFICE === "1" && decodedPath.startsWith("/api/")) return Response.json({ error: "demo_read_only" }, { status: 403, headers: { "Cache-Control": "no-store" } });
-    if (env.ALOHA_DEMO_BACKOFFICE === "1" && /^\/(?:fr\/)?secret-spot(?:\/|$)/.test(decodedPath)) {
+    if (env.ALOHA_DEMO_BACKOFFICE === "1" && /^\/(?:en\/)?secret-spot(?:\/|$)/.test(decodedPath)) {
       if (!["GET", "HEAD"].includes(request.method)) return new Response(null, { status: 405 });
-      if (!/^\/(?:fr\/)?secret-spot\/(?:rubriques\/)?$/.test(decodedPath) && decodedPath !== "/secret-spot/demo.json") return new Response(null, { status: 404 });
+      if (!/^\/(?:en\/)?secret-spot\/(?:rubriques\/)?$/.test(decodedPath) && decodedPath !== "/secret-spot/demo.json") return new Response(null, { status: 404 });
       const result = await env.ASSETS.fetch(request);
       const headers = new Headers(result.headers); headers.set("X-Robots-Tag", "noindex, nofollow");
       return new Response(result.body, { status: result.status, headers });

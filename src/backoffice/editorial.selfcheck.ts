@@ -5,8 +5,8 @@ import { creerEditeur } from "./editorial.ts";
 import { parseFrontmatter, stringifyPost } from "./frontmatter.ts";
 import type { SiteEditorial, ServicesEditoriaux } from "./contrat.ts";
 
-const site: SiteEditorial = { id: "reef", depot: "owner/reef", branche: "main", dossierArticles: "src/data/posts", dossierAuteurs: "src/data/authors", dossierSujets: "src/data/topics", dossierImages: "src/assets/covers", format: "reef", langues: ["fr", "en"] };
-const fm = { title: "Été à Pau", description: "Description", pubDate: "2026-09-15", author: "fr/lea", topic: "fr/design", draft: true, custom: "conserver" };
+const site: SiteEditorial = { id: "reef", depot: "owner/reef", branche: "main", dossierArticles: "src/data/posts", dossierAuteurs: "src/data/authors", dossierSujets: "src/data/topics", dossierImages: "src/assets/covers", format: "reef", langues: ["it", "en"] };
+const fm = { title: "Été à Pau", description: "Description", pubDate: "2026-09-15", author: "it/lea", topic: "it/design", draft: true, custom: "conserver" };
 let calls = 0;
 let writes: Record<string, unknown>[] = [];
 let role = "admin";
@@ -20,7 +20,7 @@ const services: ServicesEditoriaux = {
     if (path.endsWith("/git/ref/heads/main")) return Response.json({ object: { sha: head } });
     if (path.endsWith(`/git/commits/${head}`)) return Response.json({ tree: { sha: "old-tree" } });
     if (path.endsWith("/git/trees")) {
-      assert.equal(input.tree[0].path, "src/data/posts/fr/article.md"); writes.push(input.tree[0]);
+      assert.equal(input.tree[0].path, "src/data/posts/it/article.md"); writes.push(input.tree[0]);
       return Response.json({ sha: "new-tree" });
     }
     if (path.endsWith("/git/commits")) { assert.deepEqual(input.parents, [head]); return Response.json({ sha: "new-commit" }); }
@@ -33,25 +33,25 @@ const services: ServicesEditoriaux = {
   },
 };
 const editor = creerEditeur(site, services);
-const request = (body: unknown, origin = "https://reef.example.test") => new Request("https://reef.example.test/api/articles/fr/article", { method: "POST", headers: { Origin: origin, "Content-Type": "application/json" }, body: JSON.stringify(body) });
+const request = (body: unknown, origin = "https://reef.example.test") => new Request("https://reef.example.test/api/articles/it/article", { method: "POST", headers: { Origin: origin, "Content-Type": "application/json" }, body: JSON.stringify(body) });
 const valid = { sha: "old-blob", frontmatter: { title: "Été modifié 🌊" }, body: "Texte français 🌊" };
 role = "anonymous";
-assert.equal((await editor(request(valid), "fr", "article")).status, 401);
+assert.equal((await editor(request(valid), "it", "article")).status, 401);
 role = "customer";
-assert.equal((await editor(request(valid), "fr", "article")).status, 403);
+assert.equal((await editor(request(valid), "it", "article")).status, 403);
 role = "admin";
-assert.equal((await editor(request(valid, "https://other.example.test"), "fr", "article")).status, 403);
-assert.equal((await editor(request(valid), "fr", "../secret")).status, 400);
+assert.equal((await editor(request(valid, "https://other.example.test"), "it", "article")).status, 403);
+assert.equal((await editor(request(valid), "it", "../secret")).status, 400);
 assert.equal(calls, 0, "Les refus ne consultent pas GitHub");
-assert.equal((await editor(request(null), "fr", "article")).status, 400);
-assert.equal((await editor(request({ ...valid, body: "é".repeat(310_000) }), "fr", "article")).status, 413);
+assert.equal((await editor(request(null), "it", "article")).status, 400);
+assert.equal((await editor(request({ ...valid, body: "é".repeat(310_000) }), "it", "article")).status, 413);
 assert.equal(calls, 0, "Le corps invalide ou trop grand ne consulte pas GitHub");
-assert.equal((await editor(request({ ...valid, sha: "stale" }), "fr", "article")).status, 409);
-assert.equal((await editor(request({ ...valid, frontmatter: { author: "fr/absent" } }), "fr", "article")).status, 422);
+assert.equal((await editor(request({ ...valid, sha: "stale" }), "it", "article")).status, 409);
+assert.equal((await editor(request({ ...valid, frontmatter: { author: "it/absent" } }), "it", "article")).status, 422);
 assert.equal(writes.length, 0, "Aucune ecriture apres conflit ou document invalide");
-assert.equal((await editor(request({ ...valid, unset: ["author"] }), "fr", "article")).status, 422);
+assert.equal((await editor(request({ ...valid, unset: ["author"] }), "it", "article")).status, 422);
 assert.equal(writes.length, 0, "Impossible de supprimer un champ obligatoire");
-const saved = await editor(request(valid), "fr", "article");
+const saved = await editor(request(valid), "it", "article");
 assert.equal(saved.status, 200);
 const savedResult = await saved.json();
 assert.equal(savedResult.publication, "building");
@@ -68,19 +68,19 @@ console.log("Controles HTTP passes : droits, origine, chemins, conflits, referen
 
 const deletion = { action: "delete", sha: "old-blob" };
 role = "anonymous";
-assert.equal((await editor(request(deletion), "fr", "article")).status, 401);
+assert.equal((await editor(request(deletion), "it", "article")).status, 401);
 role = "customer";
-assert.equal((await editor(request(deletion), "fr", "article")).status, 403);
+assert.equal((await editor(request(deletion), "it", "article")).status, 403);
 role = "admin";
-assert.equal((await editor(request(deletion, "https://evil.test"), "fr", "article")).status, 403);
-assert.equal((await editor(request({ action: "delete" }), "fr", "article")).status, 409);
-assert.equal((await editor(request({ ...deletion, sha: "stale" }), "fr", "article")).status, 409);
+assert.equal((await editor(request(deletion, "https://evil.test"), "it", "article")).status, 403);
+assert.equal((await editor(request({ action: "delete" }), "it", "article")).status, 409);
+assert.equal((await editor(request({ ...deletion, sha: "stale" }), "it", "article")).status, 409);
 assert.equal(writes.length, 1);
-const removed = await editor(request(deletion), "fr", "article");
+const removed = await editor(request(deletion), "it", "article");
 assert.equal(removed.status, 200); assert.equal((await removed.json()).deleted, true);
 assert.equal(writes.length, 2);
 console.log("Suppression : droits, origine et revision controles avant ecriture.");
 
 concurrent = true;
-assert.equal((await editor(request(valid), "fr", "article")).status, 409);
+assert.equal((await editor(request(valid), "it", "article")).status, 409);
 console.log("Article : commit concurrent sur un autre fichier refuse sans push force.");

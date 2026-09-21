@@ -1,7 +1,7 @@
 // src/i18n/content.ts - le pont entre les collections de contenu et les langues.
 //
 // Les fichiers de src/data vivent dans un sous-dossier par langue, donc leurs id
-// sont prefixes : "en/from-nps-to-roadmap", "fr/from-nps-to-roadmap". Ces deux
+// sont prefixes : "it/from-nps-to-roadmap", "en/from-nps-to-roadmap". Ces deux
 // entrees sont le MEME billet dans deux langues, et c'est cette convention qui
 // permet au selecteur de langue d'emmener le lecteur sur la traduction de
 // l'article qu'il lit, au lieu de le renvoyer a l'accueil.
@@ -53,7 +53,7 @@ export async function getLocalizedCollection<C extends CollectionKey>(
 /**
  * Les langues dans lesquelles une entree existe reellement.
  *
- * Un billet traduit en francais mais pas en espagnol ne doit pas apparaitre
+ * Un billet traduit en italien mais pas en espagnol ne doit pas apparaitre
  * dans le hreflang espagnol : declarer une alternative qui renvoie un 404 est
  * pire que ne rien declarer du tout.
  */

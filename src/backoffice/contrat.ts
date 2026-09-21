@@ -1,7 +1,7 @@
 // contrat.ts - les capacites explicites du back office Aloha partage.
 export type Role = "admin" | "customer";
 export type Identite = { email: string; role: Role };
-export type Langue = "fr" | "en";
+export type Langue = "it" | "en";
 export type Capacites = {
   articles: boolean;
   produits: boolean;
@@ -42,7 +42,7 @@ export function verifierConfiguration(site: SiteEditorial): void {
       throw new Error("Dossier editorial invalide");
     }
   }
-  if (!site.branche || !site.langues.length || site.langues.some((value) => !["fr", "en"].includes(value))) {
+  if (!site.branche || !site.langues.length || site.langues.some((value) => !["it", "en"].includes(value))) {
     throw new Error("Branche ou langue invalide");
   }
 }

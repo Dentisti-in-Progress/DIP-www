@@ -21,7 +21,7 @@ export async function backoffice(request: Request, env: BackofficeEnv, transport
   const url = new URL(request.url);
   let path: string;
   try { path = decodeURIComponent(url.pathname); } catch { return fail(400, "invalid_path"); }
-  const privatePage = /^\/(?:fr\/)?secret-spot(?:\/|\.html$|$)/.test(path);
+  const privatePage = /^\/(?:it\/)?secret-spot(?:\/|\.html$|$)/.test(path);
   const privateApi = path.startsWith("/api/");
   if (!privatePage && !privateApi) return null;
   const authService = env.ALOHA_AUTH ?? authAutonome(env, url.origin, transport);
@@ -33,11 +33,11 @@ export async function backoffice(request: Request, env: BackofficeEnv, transport
     const site = JSON.parse(env.ALOHA_EDITORIAL_CONFIG) as SiteEditorial;
     verifierConfiguration(site);
     const auth = connexionAloha({ service: authService, origine: authOrigin, administrateurs: env.ALOHA_ADMIN_EMAILS.split(",") });
-    const guard = creerGardePages({ bases: ["/secret-spot", "/fr/secret-spot"], autoriser: auth.identity, servir: (req) => env.ASSETS.fetch(req) });
+    const guard = creerGardePages({ bases: ["/secret-spot", "/it/secret-spot"], autoriser: auth.identity, servir: (req) => env.ASSETS.fetch(req) });
     if (privatePage) return await guard(request);
     const login = await auth.route(request);
     if (login) return login;
-    const publication = /^\/api\/editorial-status\/(fr|en)\/([a-z0-9-]+)$/.exec(path);
+    const publication = /^\/api\/editorial-status\/(it|en)\/([a-z0-9-]+)$/.exec(path);
     if (publication) {
       if (request.method !== "GET") return fail(405, "method_not_allowed");
       if (!await auth.identity(request)) return fail(401, "admin_required");
@@ -48,7 +48,7 @@ export async function backoffice(request: Request, env: BackofficeEnv, transport
       return Response.json({ sha, builtAt: data.builtAt ?? null }, { headers: { "Cache-Control": "private, no-store" } });
     }
     const categoryRoute = path.startsWith("/api/editorial-categories/");
-    const route = /^\/api\/editorial(?:-categories)?\/(fr|en)(?:\/([a-z0-9-]+))?$/.exec(path);
+    const route = /^\/api\/editorial(?:-categories)?\/(it|en)(?:\/([a-z0-9-]+))?$/.exec(path);
     if (!route) return fail(404, "not_found");
     if (!["GET", "POST"].includes(request.method)) return fail(405, "method_not_allowed");
     if (request.method === "POST" && request.headers.get("Origin") !== url.origin) return fail(403, "invalid_origin");

@@ -4,7 +4,7 @@ type Turnstile = { render(el: HTMLElement, options: Record<string, unknown>): st
 function init() {
   const root = document.querySelector<HTMLElement>("[data-admin-login]");
   if (!root || root.dataset.ready) return; root.dataset.ready = "1";
-  const locale = root.dataset.locale === "fr" ? "fr" : "en";
+  const locale = root.dataset.locale === "it" ? "it" : "en";
   const t = backofficeCopy[locale];
   const status = root.querySelector<HTMLElement>("[data-login-status]")!;
   const requestForm = root.querySelector<HTMLFormElement>("[data-request-code]")!;

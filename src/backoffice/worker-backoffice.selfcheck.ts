@@ -12,7 +12,7 @@ assert.equal(assets, 0);
 Object.assign(env, {
   ALOHA_AUTH_ORIGIN: "https://auth.example.test", ALOHA_ADMIN_EMAILS: "admin@example.test",
   GITHUB_CONTENT_TOKEN: "test-token-only",
-  ALOHA_EDITORIAL_CONFIG: JSON.stringify({ id: "reef", depot: "owner/reef", branche: "main", dossierArticles: "src/data/posts", dossierAuteurs: "src/data/authors", dossierSujets: "src/data/topics", dossierImages: "src/assets/covers", format: "reef", langues: ["fr", "en"] }),
+  ALOHA_EDITORIAL_CONFIG: JSON.stringify({ id: "reef", depot: "owner/reef", branche: "main", dossierArticles: "src/data/posts", dossierAuteurs: "src/data/authors", dossierSujets: "src/data/topics", dossierImages: "src/assets/covers", format: "reef", langues: ["it", "en"] }),
   ALOHA_AUTH: { fetch: async () => Response.json({ authenticated, role: "admin", email: "admin@example.test" }) },
 });
 const transport: typeof fetch = async (input, init) => {
@@ -25,13 +25,13 @@ const transport: typeof fetch = async (input, init) => {
   return Response.json({ data: { repository: { object: { entries: [] } } } });
 };
 assert.equal((await backoffice(req("/secret-spot/"), env, transport))?.status, 302);
-assert.equal((await backoffice(req("/api/editorial/fr"), env, transport))?.status, 401);
+assert.equal((await backoffice(req("/api/editorial/it"), env, transport))?.status, 401);
 assert.equal(github, 0);
 authenticated = true;
 assert.equal((await backoffice(req("/secret-spot/"), env, transport))?.status, 200);
 assert.equal((await backoffice(req("/api/admin/orders"), env, transport))?.status, 404);
 assert.equal((await backoffice(req("/api/compte"), env, transport))?.status, 404);
-const articles = await backoffice(req("/api/editorial/fr"), env, transport);
+const articles = await backoffice(req("/api/editorial/it"), env, transport);
 assert.equal(articles?.status, 200);
 assert.equal((await articles?.json()).site, "reef");
 assert.equal(github, 4);
@@ -39,13 +39,13 @@ let relays = 0;
 delete env.GITHUB_CONTENT_TOKEN;
 env.ALOHA_CONTENT = { fetch: async request => {
   relays++;
-  assert.equal(new URL(request.url).pathname, "/api/admin/theme-editorial/reef/fr");
+  assert.equal(new URL(request.url).pathname, "/api/admin/theme-editorial/reef/it");
   assert.equal(request.headers.get("Origin"), "https://reef.example.test");
   return Response.json({ site: "reef" });
 } };
-assert.equal((await backoffice(req("/api/editorial/fr"), env, transport))?.status, 200);
+assert.equal((await backoffice(req("/api/editorial/it"), env, transport))?.status, 200);
 assert.equal(relays, 1);
-const crossSite = new Request("https://reef.example.test/api/editorial/fr", { method: "POST", headers: { Origin: "https://other.example.test" }, body: "{}" });
+const crossSite = new Request("https://reef.example.test/api/editorial/it", { method: "POST", headers: { Origin: "https://other.example.test" }, body: "{}" });
 assert.equal((await backoffice(crossSite, env, transport))?.status, 403);
 assert.equal(relays, 1, "Le relais ne blanchit pas l'origine d'une requete externe");
 assert.equal(github, 4, "Le jeton central n'est jamais copie dans Reef");

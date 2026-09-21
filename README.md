@@ -15,7 +15,7 @@
 <p align="center">
   <a href="https://reef.alohapixel.app"><b>Live demo</b></a>
   &nbsp;·&nbsp;
-  <a href="https://reef.alohapixel.app/fr/">Version française</a>
+  <a href="https://reef.alohapixel.app/en/">Versione italiana</a>
   &nbsp;·&nbsp;
   <a href="#quick-start">Quick start</a>
   &nbsp;·&nbsp;
@@ -26,7 +26,7 @@
   <img alt="Astro 7" src="https://img.shields.io/badge/Astro-7-BC52EE?style=flat-square&logo=astro&logoColor=white">
   <img alt="Tailwind CSS v4" src="https://img.shields.io/badge/Tailwind-v4-38BDF8?style=flat-square&logo=tailwindcss&logoColor=white">
   <img alt="TypeScript strict" src="https://img.shields.io/badge/TypeScript-strict-3178C6?style=flat-square&logo=typescript&logoColor=white">
-  <img alt="English and French" src="https://img.shields.io/badge/i18n-EN%20%2B%20FR-1D7F8D?style=flat-square">
+  <img alt="Italian and English" src="https://img.shields.io/badge/i18n-EN%20%2B%20FR-1D7F8D?style=flat-square">
   <img alt="Free" src="https://img.shields.io/badge/price-free-FF7A59?style=flat-square">
 </p>
 
@@ -35,7 +35,7 @@
 A blog theme for Astro 7, by Aloha Pixel. One repository gives you the whole
 front of a writing publication: a home that leads with the latest piece, a
 paginated blog, topic and author pages, a reading column with a table of
-contents, and a per-language RSS feed. In English and in French, from the same
+contents, and a per-language RSS feed. In Italian and in English, from the same
 source.
 
 Reef 2.3 includes the optional **Aloha editorial back office**, using the common
@@ -73,7 +73,7 @@ Numbers below were counted from the source, not estimated (snapshot
 | Section components | 24 |
 | Original hand-drawn icons | 60 |
 | animate-* utilities (motion catalog + brand tokens) | 55 + 3 |
-| Languages, from one page source each | 2 (English at the root, French under /fr/) |
+| Languages, from one page source each | 2 (Italian at the root, English under /en/) |
 | Runtime dependencies | 9, every one listed in THIRD-PARTY.md |
 
 ## Why it feels expensive
@@ -95,7 +95,7 @@ Numbers below were counted from the source, not estimated (snapshot
   share a shadow recipe: dark swaps cast shadows for luminous borders.
 - **Bilingual by construction.** One page source per route, one output per
   language, one post file per language under the same slug. The dictionary is
-  a typed object, so a missing French key is a build error, not a silently
+  a typed object, so a missing Italian key is a build error, not a silently
   English sentence in production.
 - **Accessibility as a feature.** 44px touch targets, correct aria wiring,
   visible focus everywhere, and reduced motion honored at both the CSS and the
@@ -148,7 +148,7 @@ src/
   config/       typed site data: siteData, navData, legalData
   content.config.ts  the posts, authors and topics collections, zod schemas
   data/         your content: posts (Markdown/MDX), authors and topics (JSON)
-  i18n/         the bilingual layer: config, helpers, en/ and fr/ dictionaries
+  i18n/         the bilingual layer: config, helpers, en/ and it/ dictionaries
   js/           pure logic: JSON-LD builders, pagination, text utils
   layouts/      BaseLayout + BaseHead (the entire <head>, hand-written)
   pages/        [...locale]/ (index, blog, topics, authors, about, contact, legal), 404, robots, llms, rss
@@ -167,11 +167,11 @@ docs/           the five convention files, one per subsystem
 3. `pnpm rebrand "#yourbrandcolor"`, then `pnpm og` to repaint the share cards.
 4. **src/data/**: replace the demo posts, authors and topics. One Markdown post
    per language under the same slug.
-5. **src/i18n/ui/en/** and **src/i18n/ui/fr/**: all the interface copy. Nothing
+5. **src/i18n/ui/en/** and **src/i18n/ui/it/**: all the interface copy. Nothing
    displayed lives in a component.
 6. **src/config/navData.json.ts** and **legalData.json.ts**: your links, and the
    privacy and terms copy. The bracketed fields to fill in are not there: they
-   are in the legal notice, in src/i18n/ui/en/pages.ts and src/i18n/ui/fr/pages.ts.
+   are in the legal notice, in src/i18n/ui/en/pages.ts and src/i18n/ui/it/pages.ts.
 
 ## Before you deploy
 
@@ -184,7 +184,7 @@ docs/           the five convention files, one per subsystem
       colors and not Reef Notes'.
 - [ ] Legal copy in src/config/legalData.json.ts reviewed by a human who may
       legally have an opinion, and the bracketed fields of the legal notice
-      (src/i18n/ui/en/pages.ts and src/i18n/ui/fr/pages.ts) filled in. It all
+      (src/i18n/ui/en/pages.ts and src/i18n/ui/it/pages.ts) filled in. It all
       ships as a generic starting point, in both languages, and none of it is
       legal advice.
 - [ ] The demo posts, authors and topics replaced with your own.

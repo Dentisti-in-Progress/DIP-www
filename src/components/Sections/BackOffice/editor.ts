@@ -7,7 +7,7 @@ function init() {
   const root = document.querySelector<HTMLElement>("[data-editor]");
   if (!root || root.dataset.ready) return;
   root.dataset.ready = "1";
-  const lang = root.dataset.locale === "fr" ? "fr" : "en";
+  const lang = root.dataset.locale === "it" ? "it" : "en";
   const t = backofficeCopy[lang];
   const demo = root.dataset.demo === "true";
   const form = root.querySelector<HTMLFormElement>("[data-article-form]")!;

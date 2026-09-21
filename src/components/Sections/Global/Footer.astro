@@ -76,8 +76,8 @@ const creditHref = siteData.author.twitter
 const noticeKey = siteData.demoNotice?.trim() ?? "";
 const demoNotice = noticeKey === "demo.notice" ? t.demo.notice : noticeKey;
 const [noticeBefore = "", noticeAfter = ""] = demoNotice.split("{studio}");
-// La boutique du theme, avec le prefixe de la langue courante : /fr/ en
-// francais, la racine en anglais. Jamais de domaine ecrit deux fois.
+// La boutique du theme, avec le prefixe de la langue courante : /en/ en
+// anglais, la racine en italien. Jamais de domaine ecrit deux fois.
 const studioHref = `https://alohapixel.app${localePrefix(locale)}/`;
 
 const columnLink =
