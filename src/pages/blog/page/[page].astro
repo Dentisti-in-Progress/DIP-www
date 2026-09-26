@@ -25,6 +25,7 @@ const posts: CollectionEntry<'blog'>[] = (await getCollection('blog'))
 const currentPage = Number(Astro.params.page);
 const totalPages = Math.ceil(posts.length / pageSize);
 const visiblePosts = posts.slice((currentPage - 1) * pageSize, currentPage * pageSize);
+const base = import.meta.env.BASE_URL.endsWith('/') ? import.meta.env.BASE_URL : `${import.meta.env.BASE_URL}/`;
 ---
 
 <BaseLayout title={`Blog | Pagina ${currentPage} | Dentisti in Progress`} description="Articoli, casi pratici e riflessioni sul mondo dell'odontoiatria.">
@@ -38,7 +39,7 @@ const visiblePosts = posts.slice((currentPage - 1) * pageSize, currentPage * pag
       </div>
 
       <div class="blog-tools">
-        <a class="tag-directory-link" href="/blog/tags">Esplora tutti i tag</a>
+        <a class="tag-directory-link" href={`${base}blog/tags`}>Esplora tutti i tag</a>
         <p class="blog-search-status">Pagina {currentPage} di {totalPages}</p>
       </div>
 

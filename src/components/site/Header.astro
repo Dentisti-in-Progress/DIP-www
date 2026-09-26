@@ -1,16 +1,17 @@
 ---
 import brandImage from '../../assets/download.jpeg';
 
+const base = import.meta.env.BASE_URL.endsWith('/') ? import.meta.env.BASE_URL : `${import.meta.env.BASE_URL}/`;
 const nav = [
-  { label: 'Home', href: '/' },
-  { label: 'Blog', href: '/blog' },
+  { label: 'Home', href: base },
+  { label: 'Blog', href: `${base}blog` },
   { label: 'Community', href: 'https://community.dentisti-inprogress.it/' },
 ];
 ---
 
 <header id="site-header">
   <div class="wrap header-row">
-    <a class="brand" href="/">
+    <a class="brand" href={base}>
       <img
         class="brand-mark"
         alt=""
@@ -19,7 +20,7 @@ const nav = [
       <span class="brand-word">Dentisti <b>in Progress</b></span>
     </a>
 
-    <form class="site-search" action="/blog" method="get" role="search">
+    <form class="site-search" action={`${base}blog`} method="get" role="search">
       <label class="sr-only" for="site-search-input">Cerca nel blog</label>
       <input
         id="site-search-input"

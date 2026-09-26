@@ -3,6 +3,7 @@ import sitemap from '@astrojs/sitemap';
 
 export default defineConfig({
   site: 'https://www.dentisti-inprogress.it',
+  base: process.env.GITHUB_ACTIONS === 'true' ? '/DIP-www' : '/',
   output: 'static',
   compressHTML: true,
   integrations: [

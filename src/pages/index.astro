@@ -3,6 +3,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import Header from '../components/site/Header.astro';
 import Footer from '../components/site/Footer.astro';
 
+const base = import.meta.env.BASE_URL.endsWith('/') ? import.meta.env.BASE_URL : `${import.meta.env.BASE_URL}/`;
 const categories = [
   {
     title: 'Lavoro',
@@ -31,7 +32,7 @@ const categories = [
   {
     title: 'Blog',
     description: 'Approfondimenti e riflessioni sul mondo dell’odontoiatria e su come si costruisce una carriera.',
-    href: '/blog',
+    href: `${base}blog`,
     accent: '#2E7A76',
   },
   {
