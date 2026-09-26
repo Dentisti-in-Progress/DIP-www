@@ -1,0 +1,49 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Header from '../../components/site/Header.astro';
+import Footer from '../../components/site/Footer.astro';
+import { getCollection, render, type CollectionEntry } from 'astro:content';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('blog');
+  return posts.map((post: CollectionEntry<'blog'>) => ({
+    params: { slug: post.id.replace(/\.md$/, '') },
+    props: { post },
+  }));
+}
+
+const { post } = Astro.props as { post: CollectionEntry<'blog'> };
+const { Content } = await render(post);
+---
+
+<BaseLayout title={`${post.data.title} | Dentisti in Progress`} description={post.data.description}>
+  <Header />
+
+  <main class="article-page">
+    <article class="wrap article-content">
+      <div class="topic-meta">
+        {new Date(post.data.pubDate).toLocaleDateString('it-IT', {
+          day: '2-digit',
+          month: 'long',
+          year: 'numeric',
+        })}
+      </div>
+
+      <h1>{post.data.title}</h1>
+
+      <div class="topic-meta" style="margin-bottom: 1.5rem;">
+        {post.data.author}
+      </div>
+
+      <div style="margin: 1rem 0 2rem;">
+        {post.data.tags.map((tag: string) => (
+          <span class="pill pill-blog" style="margin-right: 0.5rem;">{tag}</span>
+        ))}
+      </div>
+
+      <Content />
+    </article>
+  </main>
+
+  <Footer />
+</BaseLayout>

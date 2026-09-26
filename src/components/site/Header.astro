@@ -1,0 +1,43 @@
+---
+import brandImage from '../../assets/download.jpeg';
+
+const nav = [
+  { label: 'Home', href: '/' },
+  { label: 'Blog', href: '/blog' },
+  { label: 'Community', href: 'https://community.dentisti-inprogress.it/' },
+];
+---
+
+<header id="site-header">
+  <div class="wrap header-row">
+    <a class="brand" href="/">
+      <img
+        class="brand-mark"
+        alt=""
+        src={brandImage.src}
+      />
+      <span class="brand-word">Dentisti <b>in Progress</b></span>
+    </a>
+
+    <form class="site-search" action="/blog" method="get" role="search">
+      <label class="sr-only" for="site-search-input">Cerca nel blog</label>
+      <input
+        id="site-search-input"
+        name="q"
+        type="search"
+        placeholder="Cerca nel blog"
+        autocomplete="off"
+        spellcheck="false"
+      />
+      <button type="submit">Cerca</button>
+    </form>
+
+    <nav class="site-nav" aria-label="Navigazione principale">
+      {nav.map((item) => (
+        <a class:list={{ 'nav-link': true }} href={item.href}>
+          {item.label}
+        </a>
+      ))}
+    </nav>
+  </div>
+</header>

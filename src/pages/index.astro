@@ -1,0 +1,183 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/site/Header.astro';
+import Footer from '../components/site/Footer.astro';
+
+const categories = [
+  {
+    title: 'Lavoro',
+    description: 'Annunci di collaborazione e opportunità pubblicati da studi e colleghi in tutta Italia. Inserisci il tuo.',
+    href: 'https://community.dentisti-inprogress.it/c/lavoro/26',
+    accent: '#F0653E',
+  },
+  {
+    title: 'Q&A',
+    description: 'Il tuo spazio di confronto: fai una domanda alla community e ricevi risposte da chi ci è già passato.',
+    href: 'https://community.dentisti-inprogress.it/c/generale/4',
+    accent: '#2E7A76',
+  },
+  {
+    title: 'Master/Corsi',
+    description: 'Il database di master, corsi e congressi. Cerca tra gli eventi e lascia una recensione di quelli fatti.',
+    href: 'https://community.dentisti-inprogress.it/c/eventi/12',
+    accent: '#5CA39D',
+  },
+  {
+    title: 'Specializzazioni',
+    description: 'I bandi di specializzazione raccolti in un unico posto e aggiornati dalla community.',
+    href: 'https://community.dentisti-inprogress.it/c/specializzazioni/20',
+    accent: '#123338',
+  },
+  {
+    title: 'Blog',
+    description: 'Approfondimenti e riflessioni sul mondo dell’odontoiatria e su come si costruisce una carriera.',
+    href: '/blog',
+    accent: '#2E7A76',
+  },
+  {
+    title: 'Mercatino dell’Usato',
+    description: 'Vendi l’attrezzatura che non usi più o trova quella che ti serve, confrontandoti con i colleghi.',
+    href: 'https://community.dentisti-inprogress.it/c/mercatino-dellusato/43',
+    accent: '#6C7674',
+  },
+];
+
+const steps = [
+  { number: '1', title: 'Crea il profilo', text: 'Bastano un’email e due minuti: l’accesso alla community è aperto a tutti i giovani odontoiatri e igienisti.' },
+  { number: '2', title: 'Partecipa', text: 'Rispondi, chiedi, pubblica un annuncio di lavoro o la recensione di un corso che hai seguito.' },
+  { number: '3', title: 'Cresci', text: 'Costruisci la tua rete di colleghi in tutta Italia fin dal primo giorno di carriera.' },
+];
+
+const discussions = [
+  {
+    label: 'Lavoro',
+    type: 'pill-general',
+    title: 'Studio Dentistico San Donà di Piave ricerca giovane Odontoiatra',
+    meta: '67 colleghi hanno visto l’annuncio',
+    href: 'https://community.dentisti-inprogress.it/t/studio-dentistico-san-dona-di-piave-ricerca-giovane-odontoiatra/645',
+  },
+  {
+    label: 'Q&A',
+    type: 'pill-general',
+    title: 'Macchina fotografica per foto intra ed extra-orali',
+    meta: '4 colleghi hanno risposto',
+    href: 'https://community.dentisti-inprogress.it/t/macchina-fotografica-foto-intra-ed-extra-orali/726',
+  },
+];
+---
+
+<BaseLayout
+  title="Dentisti in Progress — La community italiana per chi diventa dentista"
+  description="Dentisti in Progress è la community italiana dove giovani odontoiatri e igienisti condividono lavoro, corsi, specializzazioni e domande di tutti i giorni."
+>
+  <Header />
+
+  <main id="main">
+    <section class="hero">
+      <div class="wrap hero-grid">
+        <div class="hero-copy">
+          <h1>Il percorso per diventare dentista non finisce con la laurea.</h1>
+          <p class="lede">
+            Dentisti in Progress è la community italiana dove giovani odontoiatri e igienisti
+            si scambiano ogni giorno collaborazioni di lavoro, corsi, bandi di specializzazione
+            e risposte alle domande che nessun manuale spiega davvero.
+          </p>
+          <div class="hero-actions">
+            <a class="btn btn-primary" href="https://community.dentisti-inprogress.it/">
+              Entra nella community
+            </a>
+            <a class="btn btn-ghost" href="#categorie">Guarda cosa c'è dentro</a>
+          </div>
+        </div>
+
+        <div class="hero-visual" aria-hidden="true">
+          <div class="topic-card card-a">
+            <span class="pill pill-spec">Specializzazioni</span>
+            <span class="topic-title">Odontoiatria 2025/2026: la ripartizione delle 1.520 borse ministeriali</span>
+            <span class="topic-meta">349 visualizzazioni</span>
+          </div>
+
+          <div class="topic-card card-b">
+            <span class="pill pill-lavoro" style="background:rgba(240,101,62,0.22);color:#ffd8c9;">Lavoro</span>
+            <span class="topic-title">Studio Dentistico San Donà di Piave ricerca giovane odontoiatra</span>
+            <span class="topic-meta">1 risposta · 67 visualizzazioni</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="facts">
+      <div class="wrap facts-row">
+        <div class="fact"><strong>7</strong><span>aree della community, da Lavoro a Q&amp;A</span></div>
+        <div class="fact"><strong>100%</strong><span>pensata per giovani odontoiatri e igienisti</span></div>
+        <div class="fact"><strong>Ogni giorno</strong><span>nuovi annunci, bandi e domande</span></div>
+      </div>
+    </div>
+
+    <section id="categorie">
+      <div class="wrap">
+        <div class="section-head">
+          <h2>Tutto quello che ti serve, in un posto solo</h2>
+          <p>Dentisti in Progress raccoglie ciò che serve a chi muove i primi passi nella professione: lavoro, formazione, specializzazioni e confronto con chi ci è già passato.</p>
+        </div>
+
+        <div class="cat-grid">
+          {categories.map((category) => (
+            <a class="cat-card" style={`--cat-accent:${category.accent}`} href={category.href}>
+              <h3>{category.title}</h3>
+              <p>{category.description}</p>
+              <span class="go">Vai alla sezione</span>
+            </a>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="wrap">
+        <div class="section-head">
+          <h2>Come funziona</h2>
+        </div>
+
+        <div class="steps">
+          <div class="steps-line"></div>
+          {steps.map((step) => (
+            <div class="step" data-step={step.number}>
+              <h3>{step.title}</h3>
+              <p>{step.text}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="wrap">
+        <div class="section-head">
+          <h2>Succede ogni giorno nella community</h2>
+          <p>Una selezione di discussioni pubblicate di recente su community.dentisti-inprogress.it.</p>
+        </div>
+
+        <div class="disc-grid">
+          {discussions.map((item) => (
+            <a class="disc-card" href={item.href}>
+              <span class={`pill ${item.type}`}>{item.label}</span>
+              <span class="topic-title">{item.title}</span>
+              <span class="topic-meta">{item.meta}</span>
+            </a>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <div class="cta-band">
+      <div class="wrap">
+        <h2>Entra nella community e fai crescere il tuo percorso.</h2>
+        <p>Partecipa a discussioni, trova opportunità e confrontati con chi è già in cammino.</p>
+        <a class="btn btn-on-dark" href="https://community.dentisti-inprogress.it/">Iscriviti ora</a>
+      </div>
+    </div>
+  </main>
+
+  <Footer />
+</BaseLayout>

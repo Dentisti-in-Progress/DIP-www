@@ -1,0 +1,45 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import Header from '../../../components/site/Header.astro';
+import Footer from '../../../components/site/Footer.astro';
+import BlogCard from '../../../components/blog/BlogCard.astro';
+import { getCollection, type CollectionEntry } from 'astro:content';
+
+export async function getStaticPaths() {
+  const posts: CollectionEntry<'blog'>[] = await getCollection('blog');
+  const tags = new Set<string>();
+
+  posts.filter((post: CollectionEntry<'blog'>) => !post.data.draft).forEach((post: CollectionEntry<'blog'>) => {
+    post.data.tags.forEach((tag: string) => tags.add(tag));
+  });
+
+  return [...tags].map((tag: string) => ({
+    params: { tag },
+    props: { tag },
+  }));
+}
+
+const { tag } = Astro.props as { tag: string };
+const posts: CollectionEntry<'blog'>[] = (await getCollection('blog'))
+  .filter((post: CollectionEntry<'blog'>) => post.data.tags.includes(tag) && !post.data.draft)
+  .sort((a: CollectionEntry<'blog'>, b: CollectionEntry<'blog'>) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+---
+
+<BaseLayout title={`${tag} | Blog | Dentisti in Progress`} description={`Articoli del blog di Dentisti in Progress taggati con ${tag}.`}>
+  <Header />
+
+  <main class="blog-shell">
+    <div class="wrap">
+      <div class="section-head">
+        <h2>Tag: {tag}</h2>
+        <p>Articoli della community dedicati a {tag}.</p>
+      </div>
+
+      <div class="blog-grid">
+        {posts.length > 0 ? posts.map((post) => <BlogCard post={post} />) : <p>Nessun articolo trovato per questo tag.</p>}
+      </div>
+    </div>
+  </main>
+
+  <Footer />
+</BaseLayout>

@@ -1,0 +1,108 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Header from '../../components/site/Header.astro';
+import Footer from '../../components/site/Footer.astro';
+import BlogCard from '../../components/blog/BlogCard.astro';
+import BlogPagination from '../../components/blog/BlogPagination.astro';
+import { getCollection, type CollectionEntry } from 'astro:content';
+
+const posts: CollectionEntry<'blog'>[] = (await getCollection('blog'))
+  .filter((post: CollectionEntry<'blog'>) => !post.data.draft)
+  .sort((a: CollectionEntry<'blog'>, b: CollectionEntry<'blog'>) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+const pageSize = 6;
+const currentPage = 1;
+const totalPages = Math.ceil(posts.length / pageSize);
+---
+
+<BaseLayout title="Blog | Dentisti in Progress" description="Articoli, approfondimenti e riflessioni sul mondo dell'odontoiatria.">
+  <Header />
+
+  <main class="blog-shell">
+    <div class="wrap">
+      <div class="section-head">
+        <h2>Blog</h2>
+        <p>Articoli, casi pratici e riflessioni per chi costruisce il proprio percorso in odontoiatria.</p>
+      </div>
+
+      <div class="blog-tools">
+        <a class="tag-directory-link" href="/blog/tags">Esplora tutti i tag</a>
+        <p class="blog-search-status" aria-live="polite">{posts.length} articoli disponibili</p>
+      </div>
+
+      <div class="blog-grid" aria-label="Risultati della ricerca nel blog">
+        {posts.map((post, index) => <BlogCard post={post} initialHidden={index >= pageSize} />)}
+      </div>
+
+      <p class="blog-search-empty" hidden>Nessun articolo corrisponde alla ricerca.</p>
+      <BlogPagination currentPage={currentPage} totalPages={totalPages} />
+    </div>
+  </main>
+
+  <Footer />
+</BaseLayout>
+
+<script>
+  const searchInput = document.querySelector<HTMLInputElement>('#site-search-input');
+  const searchCards = Array.from(document.querySelectorAll<HTMLElement>('[data-search-card]'));
+  const searchStatus = document.querySelector<HTMLElement>('.blog-search-status');
+  const emptyMessage = document.querySelector<HTMLElement>('.blog-search-empty');
+  const pagination = document.querySelector<HTMLElement>('.blog-pagination');
+  const pageSize = 6;
+  let currentSearchPage = 1;
+
+  const normalize = (value: string) => value
+    .toLocaleLowerCase('it-IT')
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '');
+
+  const renderSearchPagination = (totalPages: number) => {
+    if (!pagination) return;
+    pagination.hidden = totalPages <= 1;
+    if (totalPages <= 1) return;
+
+    pagination.innerHTML = Array.from({ length: totalPages }, (_, index) => {
+      const page = index + 1;
+      return `<button class="pagination-page${page === currentSearchPage ? ' pagination-page-current' : ''}" type="button" data-search-page="${page}" aria-current="${page === currentSearchPage ? 'page' : 'false'}">${page}</button>`;
+    }).join('');
+  };
+
+  const filterPosts = (value: string) => {
+    const query = normalize(value.trim());
+    const matchingCards = searchCards.filter((card) => !query || normalize(card.dataset.searchText ?? '').includes(query));
+    const totalPages = Math.ceil(matchingCards.length / pageSize);
+    const firstVisible = (currentSearchPage - 1) * pageSize;
+    const lastVisible = firstVisible + pageSize;
+    let visibleCount = 0;
+
+    searchCards.forEach((card) => {
+      const matches = matchingCards.includes(card) && matchingCards.indexOf(card) >= firstVisible && matchingCards.indexOf(card) < lastVisible;
+      card.removeAttribute('data-initial-hidden');
+      card.hidden = !matches;
+      card.setAttribute('aria-hidden', String(!matches));
+      if (matches) visibleCount += 1;
+    });
+
+    if (searchStatus) {
+      searchStatus.textContent = query
+        ? `${matchingCards.length} ${matchingCards.length === 1 ? 'articolo trovato' : 'articoli trovati'}`
+        : `${searchCards.length} articoli disponibili`;
+    }
+
+    if (emptyMessage) emptyMessage.hidden = visibleCount !== 0;
+    renderSearchPagination(totalPages);
+  };
+
+  const initialQuery = new URLSearchParams(window.location.search).get('q') ?? '';
+  if (searchInput) {
+    searchInput.value = initialQuery;
+    searchInput.addEventListener('input', () => filterPosts(searchInput.value));
+  }
+  pagination?.addEventListener('click', (event) => {
+    const target = event.target as HTMLElement;
+    const page = Number(target.dataset.searchPage);
+    if (!page) return;
+    currentSearchPage = page;
+    filterPosts(searchInput?.value ?? '');
+  });
+  filterPosts(initialQuery);
+</script>

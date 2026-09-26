@@ -1,0 +1,54 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import Header from '../../../components/site/Header.astro';
+import Footer from '../../../components/site/Footer.astro';
+import BlogCard from '../../../components/blog/BlogCard.astro';
+import BlogPagination from '../../../components/blog/BlogPagination.astro';
+import { getCollection, type CollectionEntry } from 'astro:content';
+
+export async function getStaticPaths() {
+  const pageSize = 6;
+  const posts: CollectionEntry<'blog'>[] = (await getCollection('blog'))
+    .filter((post: CollectionEntry<'blog'>) => !post.data.draft)
+    .sort((a: CollectionEntry<'blog'>, b: CollectionEntry<'blog'>) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+  const totalPages = Math.ceil(posts.length / pageSize);
+
+  return Array.from({ length: Math.max(totalPages - 1, 0) }, (_, index) => ({
+    params: { page: String(index + 2) },
+  }));
+}
+
+const pageSize = 6;
+const posts: CollectionEntry<'blog'>[] = (await getCollection('blog'))
+  .filter((post: CollectionEntry<'blog'>) => !post.data.draft)
+  .sort((a: CollectionEntry<'blog'>, b: CollectionEntry<'blog'>) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+const currentPage = Number(Astro.params.page);
+const totalPages = Math.ceil(posts.length / pageSize);
+const visiblePosts = posts.slice((currentPage - 1) * pageSize, currentPage * pageSize);
+---
+
+<BaseLayout title={`Blog | Pagina ${currentPage} | Dentisti in Progress`} description="Articoli, casi pratici e riflessioni sul mondo dell'odontoiatria.">
+  <Header />
+
+  <main class="blog-shell">
+    <div class="wrap">
+      <div class="section-head">
+        <h2>Blog</h2>
+        <p>Articoli, casi pratici e riflessioni per chi costruisce il proprio percorso in odontoiatria.</p>
+      </div>
+
+      <div class="blog-tools">
+        <a class="tag-directory-link" href="/blog/tags">Esplora tutti i tag</a>
+        <p class="blog-search-status">Pagina {currentPage} di {totalPages}</p>
+      </div>
+
+      <div class="blog-grid" aria-label={`Articoli del blog, pagina ${currentPage}`}>
+        {visiblePosts.map((post) => <BlogCard post={post} />)}
+      </div>
+
+      <BlogPagination currentPage={currentPage} totalPages={totalPages} />
+    </div>
+  </main>
+
+  <Footer />
+</BaseLayout>

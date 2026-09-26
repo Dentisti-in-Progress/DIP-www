@@ -1,0 +1,30 @@
+---
+const { currentPage, totalPages } = Astro.props as {
+  currentPage: number;
+  totalPages: number;
+};
+---
+
+{totalPages > 1 && (
+  <nav class="blog-pagination" aria-label="Paginazione del blog" data-blog-pagination>
+    {currentPage > 1 ? (
+      <a class="pagination-link" href={currentPage === 2 ? '/blog' : `/blog/page/${currentPage - 1}`} rel="prev">
+        Precedente
+      </a>
+    ) : <span class="pagination-link pagination-link-disabled">Precedente</span>}
+
+    <div class="pagination-pages">
+      {Array.from({ length: totalPages }, (_, index) => index + 1).map((page) => (
+        page === currentPage ? (
+          <span class="pagination-page pagination-page-current" aria-current="page">{page}</span>
+        ) : (
+          <a class="pagination-page" href={page === 1 ? '/blog' : `/blog/page/${page}`}>{page}</a>
+        )
+      ))}
+    </div>
+
+    {currentPage < totalPages ? (
+      <a class="pagination-link" href={`/blog/page/${currentPage + 1}`} rel="next">Successiva</a>
+    ) : <span class="pagination-link pagination-link-disabled">Successiva</span>}
+  </nav>
+)}

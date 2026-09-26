@@ -1,0 +1,35 @@
+---
+import type { CollectionEntry } from 'astro:content';
+
+const { post, initialHidden = false } = Astro.props as {
+  post: CollectionEntry<'blog'>;
+  initialHidden?: boolean;
+};
+const slug = post.id.replace(/\.md$/, '');
+const href = `/blog/${slug}`;
+const searchText = [post.data.title, post.data.description, ...post.data.tags].join(' ');
+---
+
+<article
+  class="blog-card"
+  data-search-card
+  data-search-text={searchText}
+  data-initial-hidden={initialHidden ? 'true' : undefined}
+>
+  <div>
+    {post.data.tags.map((tag: string) => (
+      <a class="pill pill-blog tag-link" href={`/blog/tags/${encodeURIComponent(tag)}`} style="margin-right:0.4rem;">{tag}</a>
+    ))}
+  </div>
+
+  <h3><a href={href}>{post.data.title}</a></h3>
+  <p>{post.data.description}</p>
+
+  <div class="topic-meta">
+    {new Date(post.data.pubDate).toLocaleDateString('it-IT', {
+      day: '2-digit',
+      month: 'long',
+      year: 'numeric',
+    })}
+  </div>
+</article>

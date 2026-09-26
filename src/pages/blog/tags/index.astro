@@ -1,0 +1,43 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import Header from '../../../components/site/Header.astro';
+import Footer from '../../../components/site/Footer.astro';
+import { getCollection, type CollectionEntry } from 'astro:content';
+
+const posts: CollectionEntry<'blog'>[] = (await getCollection('blog'))
+  .filter((post: CollectionEntry<'blog'>) => !post.data.draft);
+
+const tagCounts = new Map<string, number>();
+
+posts.forEach((post: CollectionEntry<'blog'>) => {
+  post.data.tags.forEach((tag: string) => {
+    tagCounts.set(tag, (tagCounts.get(tag) ?? 0) + 1);
+  });
+});
+
+const tags = [...tagCounts.entries()].sort(([first], [second]) => first.localeCompare(second, 'it'));
+---
+
+<BaseLayout title="Tag | Blog | Dentisti in Progress" description="Esplora gli articoli del blog di Dentisti in Progress per tag.">
+  <Header />
+
+  <main class="blog-shell">
+    <div class="wrap">
+      <div class="section-head">
+        <h2>Esplora i tag</h2>
+        <p>Scegli un argomento per vedere tutti gli articoli del blog che lo approfondiscono.</p>
+      </div>
+
+      <div class="tag-directory" aria-label="Elenco dei tag del blog">
+        {tags.map(([tag, count]) => (
+          <a class="tag-directory-item" href={`/blog/tags/${encodeURIComponent(tag)}`}>
+            <span class="pill pill-blog">{tag}</span>
+            <span>{count} {count === 1 ? 'articolo' : 'articoli'}</span>
+          </a>
+        ))}
+      </div>
+    </div>
+  </main>
+
+  <Footer />
+</BaseLayout>
