@@ -8,6 +8,7 @@ const nav = [
   { label: 'Blog', href: `${base}blog` },
   { label: 'Community', href: 'https://community.dentisti-inprogress.it/' },
 ];
+const currentPath = Astro.url.pathname;
 ---
 
 <header id="site-header">
@@ -23,12 +24,46 @@ const nav = [
 
     <SearchBar />
 
-    <nav class="site-nav" aria-label="Navigazione principale">
+    <button class="menu-toggle" type="button" aria-controls="site-navigation" aria-expanded="false">
+      <span class="menu-toggle-label">Menu</span>
+      <span class="menu-icon" aria-hidden="true"><span></span><span></span><span></span></span>
+    </button>
+
+    <nav id="site-navigation" class="site-nav" aria-label="Navigazione principale">
       {nav.map((item) => (
-        <a class:list={{ 'nav-link': true }} href={item.href}>
+        <a
+          class:list={{ 'nav-link': true }}
+          href={item.href}
+          aria-current={
+            (item.href === base && currentPath === base) ||
+            (item.href === `${base}blog` && currentPath.startsWith(`${base}blog`))
+              ? 'page'
+              : undefined
+          }
+        >
           {item.label}
         </a>
       ))}
     </nav>
   </div>
 </header>
+
+<script>
+  const header = document.querySelector<HTMLElement>('#site-header');
+  const menuToggle = header?.querySelector<HTMLButtonElement>('.menu-toggle');
+  const navigation = header?.querySelector<HTMLElement>('.site-nav');
+
+  menuToggle?.addEventListener('click', () => {
+    const isOpen = navigation?.classList.toggle('is-open') ?? false;
+    header?.classList.toggle('menu-is-open', isOpen);
+    menuToggle.setAttribute('aria-expanded', String(isOpen));
+  });
+
+  navigation?.querySelectorAll<HTMLAnchorElement>('a').forEach((link) => {
+    link.addEventListener('click', () => {
+      navigation.classList.remove('is-open');
+      header?.classList.remove('menu-is-open');
+      menuToggle?.setAttribute('aria-expanded', 'false');
+    });
+  });
+</script>
