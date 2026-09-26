@@ -176,6 +176,24 @@ header {
   gap: 0.35rem;
 }
 
+.search-toggle {
+  display: none;
+  border: 0;
+  background: transparent;
+  color: var(--ink);
+  cursor: pointer;
+}
+
+.search-toggle svg {
+  display: block;
+  width: 1.35rem;
+  height: 1.35rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-width: 2;
+}
+
 .site-search input {
   min-width: 0;
   width: 100%;
@@ -830,22 +848,54 @@ footer {
 
 @media (max-width: 560px) {
   .header-row {
-    align-items: flex-start;
-    flex-direction: column;
+    align-items: center;
+    flex-direction: row;
+    flex-wrap: wrap;
     gap: 0.8rem;
     padding-block: 0.85rem;
   }
 
   .site-nav {
     width: 100%;
+    order: 3;
     justify-content: space-between;
     gap: 0.15rem;
   }
 
   .site-search {
-    width: 100%;
+    flex: 0 0 auto;
     max-width: none;
-    order: 3;
+    order: 1;
+    margin-left: auto;
+  }
+
+  .site-search:not(.is-open) {
+    width: auto;
+  }
+
+  .site-search:not(.is-open) input,
+  .site-search:not(.is-open) .search-submit {
+    display: none;
+  }
+
+  .search-toggle {
+    display: grid;
+    width: 2.25rem;
+    height: 2.25rem;
+    place-items: center;
+    padding: 0;
+  }
+
+  .site-search.is-open {
+    width: 100%;
+  }
+
+  .site-search.is-open .search-toggle {
+    display: none;
+  }
+
+  .search-is-open .site-nav {
+    display: none;
   }
 
   .nav-link {

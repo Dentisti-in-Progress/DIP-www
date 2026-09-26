@@ -1,5 +1,6 @@
 ---
 import brandImage from '../../assets/download.jpeg';
+import SearchBar from './SearchBar.astro';
 
 const base = import.meta.env.BASE_URL.endsWith('/') ? import.meta.env.BASE_URL : `${import.meta.env.BASE_URL}/`;
 const nav = [
@@ -20,18 +21,7 @@ const nav = [
       <span class="brand-word">Dentisti <b>in Progress</b></span>
     </a>
 
-    <form class="site-search" action={`${base}blog`} method="get" role="search">
-      <label class="sr-only" for="site-search-input">Cerca nel blog</label>
-      <input
-        id="site-search-input"
-        name="q"
-        type="search"
-        placeholder="Cerca nel blog"
-        autocomplete="off"
-        spellcheck="false"
-      />
-      <button type="submit">Cerca</button>
-    </form>
+    <SearchBar />
 
     <nav class="site-nav" aria-label="Navigazione principale">
       {nav.map((item) => (

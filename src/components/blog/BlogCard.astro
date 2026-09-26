@@ -5,8 +5,9 @@ const { post, initialHidden = false } = Astro.props as {
   post: CollectionEntry<'blog'>;
   initialHidden?: boolean;
 };
+const base = import.meta.env.BASE_URL.endsWith('/') ? import.meta.env.BASE_URL : `${import.meta.env.BASE_URL}/`;
 const slug = post.id.replace(/\.md$/, '');
-const href = `/blog/${slug}`;
+const href = `${base}blog/${slug}`;
 const searchText = [post.data.title, post.data.description, ...post.data.tags].join(' ');
 ---
 
@@ -18,7 +19,7 @@ const searchText = [post.data.title, post.data.description, ...post.data.tags].j
 >
   <div>
     {post.data.tags.map((tag: string) => (
-      <a class="pill pill-blog tag-link" href={`/blog/tags/${encodeURIComponent(tag)}`} style="margin-right:0.4rem;">{tag}</a>
+      <a class="pill pill-blog tag-link" href={`${base}blog/tags/${encodeURIComponent(tag)}`} style="margin-right:0.4rem;">{tag}</a>
     ))}
   </div>
 

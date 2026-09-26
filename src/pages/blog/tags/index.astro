@@ -16,6 +16,7 @@ posts.forEach((post: CollectionEntry<'blog'>) => {
 });
 
 const tags = [...tagCounts.entries()].sort(([first], [second]) => first.localeCompare(second, 'it'));
+const base = import.meta.env.BASE_URL.endsWith('/') ? import.meta.env.BASE_URL : `${import.meta.env.BASE_URL}/`;
 ---
 
 <BaseLayout title="Tag | Blog | Dentisti in Progress" description="Esplora gli articoli del blog di Dentisti in Progress per tag.">
@@ -30,7 +31,7 @@ const tags = [...tagCounts.entries()].sort(([first], [second]) => first.localeCo
 
       <div class="tag-directory" aria-label="Elenco dei tag del blog">
         {tags.map(([tag, count]) => (
-          <a class="tag-directory-item" href={`/blog/tags/${encodeURIComponent(tag)}`}>
+          <a class="tag-directory-item" href={`${base}blog/tags/${encodeURIComponent(tag)}`}>
             <span class="pill pill-blog">{tag}</span>
             <span>{count} {count === 1 ? 'articolo' : 'articoli'}</span>
           </a>
